@@ -89,7 +89,7 @@ import PersonItem from './components/PersonItem.vue';
       </OntologyEntity>
     </div>
     <footer>
-      Made with &nbsp<a href='https://www.npmjs.com/package/ontoglimpse'>ontoglimpse</a> &nbsp in Dresden.
+      Made with &nbsp<a href='https://www.npmjs.com/package/ontoglimpse'>ontoglimpse</a> &nbsp in Dresden. (test CI)
     </footer>
   </div>
 </template>
