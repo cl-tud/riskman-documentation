@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div class="info-item">
         <h2>{{ name }}:</h2>
         <div class="info">
             <slot name="info"></slot>
         </div>
-        <hr>
+        <!-- <hr> -->
     </div>
 </template>
 
@@ -12,14 +12,17 @@
 .info {
     margin: 10px 20px;
 }
-
-hr {
-    margin: 20px 0;
-    border: 0;
-    /* Remove default border */
-    border-top: 0.5px solid white;
-    margin: 20px 0;
+.info-item {
+    min-width: 350px;
 }
+
+/* hr { */
+    /* margin: 20px 0; */
+    /* border: 0; */
+    /* Remove default border */
+    /* border-top: 0.5px solid white; */
+    /* margin: 20px 0; */
+/* } */
 </style>
 
 <script>

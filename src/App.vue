@@ -18,80 +18,93 @@ import PersonItem from './components/PersonItem.vue';
       <header>
         <img id="logo" src="./assets/riskman_green.png">
         <div id="titles">
-          <h1>{{ meta.name }}</h1>
+          <h1 class="ubuntu-bold">{{ meta.name }}</h1>
           <h3 v-if="meta.title">{{ meta.title }}</h3>
         </div>
 
       </header>
       <hr>
 
-      <OntologyInfoItem name="Links">
-        <template #info>
-          <div id="links">
-            <span>Documentation: <a href="https://w3id.org/riskman/">https://w3id.org/riskman/</a></span>
-            <span>Ontology: <a href="https://w3id.org/riskman/ontology">https://w3id.org/riskman/ontology</a></span>
-            <span>Shapes: <a href="https://w3id.org/riskman/shapes">https://w3id.org/riskman/shapes</a></span>
-          </div>
-        </template>
-      </OntologyInfoItem>
+      <div class="side-by-side">
 
-      <OntologyInfoItem name="Creators">
-        <template #info>
-          <ul class="people">
-            <li v-for="c in meta.creators">
-              <PersonItem :person="c" />
-            </li>
-          </ul>
-        </template>
-      </OntologyInfoItem>
+        <OntologyInfoItem name="Links">
+          <template #info>
+            <div id="links">
+              <span>Documentation: <a href="https://w3id.org/riskman/">https://w3id.org/riskman/</a></span>
+              <span>Ontology: <a href="https://w3id.org/riskman/ontology">https://w3id.org/riskman/ontology</a></span>
+              <span>Shapes: <a href="https://w3id.org/riskman/shapes">https://w3id.org/riskman/shapes</a></span>
+            </div>
+            <br />
+            <div id="dates">
+              <div v-if="meta.creationDate">Creation date: <span class="date">{{ meta.creationDate }}</span></div>
+              <div v-if="meta.modificationDate">Modification date: <span class="date">{{ meta.modificationDate }}</span>
+              </div>
+            </div>
+          </template>
+        </OntologyInfoItem>
 
-
-      <OntologyInfoItem name="Contributors">
-        <template #info>
-          <ul class="people">
-            <li v-for="c in meta.contributors">
-              <PersonItem :person="c" />
-            </li>
-          </ul>
-        </template>
-      </OntologyInfoItem>
+        <!-- <OntologyInfoItem name="Download serialization">
+          <template #info>
+            <div id="serialization">
+              <a href="https://w3id.org/riskman/ontology/" class="button-link">Ontology (*.ttl)</a>
+              <a href="https://w3id.org/riskman/shapes/" class="button-link">Shapes (*.ttl)</a>
+            </div>
+          </template>
+        </OntologyInfoItem> -->
 
 
-      <OntologyInfoItem name="Download serialization">
-        <template #info>
-          <div id="serialization">
-            <a href="https://w3id.org/riskman/ontology/" class="button-link">Ontology (*.ttl)</a>
-            <a href="https://w3id.org/riskman/shapes/" class="button-link">Shapes (*.ttl)</a>
-          </div>
-        </template>
-      </OntologyInfoItem>
+        <OntologyInfoItem name="License">
+          <template #info>
+            <div id="licenses">
+              <a href="https://creativecommons.org/licenses/by/4.0/" class="button-link">CC BY 4.0</a>
+              <a href="https://creativecommons.org/licenses/by/4.0/"> <img id="cc-by" src="./assets/by.png"> </a>
+            </div>
 
-
-      <OntologyInfoItem name="License">
-        <template #info>
-          <div id="licenses">
-            <a href="https://creativecommons.org/licenses/by/4.0/" class="button-link">CC BY 4.0</a>
-            <a href="https://creativecommons.org/licenses/by/4.0/"> <img id="cc-by" src="./assets/by.png"> </a>
-          </div>
-
-        </template>
-      </OntologyInfoItem>
-
-      <div id="dates">
-        <div v-if="meta.creationDate">Creation date: <span class="date">{{ meta.creationDate }}</span></div>
-        <div v-if="meta.modificationDate">Modification date: <span class="date">{{ meta.modificationDate }}</span></div>
+          </template>
+        </OntologyInfoItem>
       </div>
       <hr>
 
-      <div v-if="meta.description">
-        <h2>Description</h2>
-        <p>{{ meta.description }}</p>
+
+      <div class="side-by-side">
+
+        <OntologyInfoItem name="Creators">
+          <template #info>
+            <ul class="people">
+              <li v-for="c in meta.creators">
+                <PersonItem :person="c" />
+              </li>
+            </ul>
+          </template>
+        </OntologyInfoItem>
+
+
+        <OntologyInfoItem name="Contributors">
+          <template #info>
+            <ul class="people">
+              <li v-for="c in meta.contributors">
+                <PersonItem :person="c" />
+              </li>
+            </ul>
+          </template>
+        </OntologyInfoItem>
+
       </div>
 
-      <div v-if="meta.abstract">
-        <h2>Abstract</h2>
-        <p>{{ meta.abstract }}</p>
-      </div>
+      <hr>
+
+      <OntologyInfoItem v-if="meta.description" name="Description">
+        <template #info>
+          <p>{{ meta.description }}</p>
+        </template>
+      </OntologyInfoItem>
+
+      <OntologyInfoItem v-if="meta.abstract" name="Abstract">
+        <template #info>
+          <p>{{ meta.abstract }}</p>
+        </template>
+      </OntologyInfoItem>
+
 
 
       <TableOfContents :objects="classes" name="Classes" />
@@ -128,6 +141,13 @@ import PersonItem from './components/PersonItem.vue';
 </template>
 
 <style scoped>
+.side-by-side {
+  display: flex;
+  flex-wrap: wrap;
+
+
+}
+
 #logo {
   width: 200px;
 }

@@ -5,7 +5,7 @@
 <template>
   <div class="toc">
 
-    <h1>{{ name }}</h1>
+    <h1 class="ubuntu-bold">{{ name }}</h1>
     <ul class="horizontal">
       <li v-for="(obj, key) of objects" :key="key"> <a :href="`#${obj.iri}`">{{ obj.name }}</a></li>
     </ul>
