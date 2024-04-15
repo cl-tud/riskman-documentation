@@ -39,15 +39,12 @@ export const useOntoStore = defineStore({
             this.isLoading = true
             try {
 
-                // debugger
                 let ontoStore = await this.fetchRDF(ontologyURL)
                 let shaclStore = await this.fetchRDF(shaclURL)
 
                 const totalStore = $rdf.graph()
                 totalStore.addAll(ontoStore.statements)
                 totalStore.addAll(shaclStore.statements)
-
-                // debugger
 
                 this.og = new OntoGlimpse(totalStore)
 
@@ -82,15 +79,12 @@ export const useOntoStore = defineStore({
 
                 }))
 
-                debugger
 
 
 
                 this.meta = this.og.metadata()
-                // debugger
 
 
-                // console.log(this.classes)
 
             } catch (error) {
 

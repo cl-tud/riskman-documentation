@@ -24,30 +24,63 @@ import PersonItem from './components/PersonItem.vue';
 
       </header>
       <hr>
-      
-      
-      <h2>Download serialization:</h2>
-      <div id="serialization">
-        <a href="https://w3id.org/riskman/ontology/" class="download">Ontology (*.ttl)</a>
-        <a href="https://w3id.org/riskman/shapes/" class="download">Shapes (*.ttl)</a>
+
+      <OntologyInfoItem name="Links">
+        <template #info>
+          <div id="links">
+            <span>Documentation: <a href="https://w3id.org/riskman/">https://w3id.org/riskman/</a></span>
+            <span>Ontology: <a href="https://w3id.org/riskman/ontology">https://w3id.org/riskman/ontology</a></span>
+            <span>Shapes: <a href="https://w3id.org/riskman/shapes">https://w3id.org/riskman/shapes</a></span>
+          </div>
+        </template>
+      </OntologyInfoItem>
+
+      <OntologyInfoItem name="Creators">
+        <template #info>
+          <ul class="people">
+            <li v-for="c in meta.creators">
+              <PersonItem :person="c" />
+            </li>
+          </ul>
+        </template>
+      </OntologyInfoItem>
+
+
+      <OntologyInfoItem name="Contributors">
+        <template #info>
+          <ul class="people">
+            <li v-for="c in meta.contributors">
+              <PersonItem :person="c" />
+            </li>
+          </ul>
+        </template>
+      </OntologyInfoItem>
+
+
+      <OntologyInfoItem name="Download serialization">
+        <template #info>
+          <div id="serialization">
+            <a href="https://w3id.org/riskman/ontology/" class="button-link">Ontology (*.ttl)</a>
+            <a href="https://w3id.org/riskman/shapes/" class="button-link">Shapes (*.ttl)</a>
+          </div>
+        </template>
+      </OntologyInfoItem>
+
+
+      <OntologyInfoItem name="License">
+        <template #info>
+          <div id="licenses">
+            <a href="https://creativecommons.org/licenses/by/4.0/" class="button-link">CC BY 4.0</a>
+            <a href="https://creativecommons.org/licenses/by/4.0/"> <img id="cc-by" src="./assets/by.png"> </a>
+          </div>
+
+        </template>
+      </OntologyInfoItem>
+
+      <div id="dates">
+        <div v-if="meta.creationDate">Creation date: <span class="date">{{ meta.creationDate }}</span></div>
+        <div v-if="meta.modificationDate">Modification date: <span class="date">{{ meta.modificationDate }}</span></div>
       </div>
-      <span style="margin-right: 10px;" v-if="meta.creationDate">Creation date: {{ meta.creationDate }}</span> <span v-if="meta.modificationDate">Modification date: {{ meta.modificationDate }}</span>
-      <hr>
-
-      <h2>Creators</h2>
-      <ul>
-        <li v-for="c in meta.creators">
-          <PersonItem :person="c" />
-        </li>
-      </ul>
-
-      <h2>Contributors</h2>
-      <ul>
-        <li v-for="c in meta.contributors">
-          <PersonItem :person="c" />
-        </li>
-      </ul>
-
       <hr>
 
       <div v-if="meta.description">
@@ -101,21 +134,46 @@ import PersonItem from './components/PersonItem.vue';
 
 #serialization {
   display: flex;
-  justify-content: flex-start;
-  margin: 10px 0;
 }
 
-a.download{
+#dates {
+
+  display: flex;
+  flex-direction: column;
+}
+
+#links {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+}
+
+.date {
+  font-weight: bold;
+}
+
+ul.people {
+  list-style: none;
+  padding: 0;
+}
+
+/* #download-buttons {
+  display: flex;
+} */
+
+a.button-link {
   display: block;
   border: 1px solid hsla(160, 100%, 37%, 1);
-  border-radius: 10%;
+  border-radius: 5%;
   padding: 2px 10px;
   cursor: pointer;
   margin-right: 20px;
   margin-left: 0;
+  max-width: fit-content;
+  height: fit-content;
 }
 
-a.download:hover {
+a.button-link:hover {
   text-decoration: none;
 }
 
@@ -128,6 +186,14 @@ header {
 #titles {
   text-align: center;
   flex-grow: 2;
+}
+
+#licenses {
+  display: flex;
+}
+
+#cc-by {
+  height: 40px
 }
 
 .specific {
@@ -156,6 +222,7 @@ hr {
 <script>
 import { useOntoStore } from './stores/ontology';
 import OntologyEntity from './components/OntologyEntity.vue';
+import OntologyInfoItem from './components/OntologyInfoItem.vue';
 
 
 export default {
@@ -173,8 +240,6 @@ export default {
   methods: {
     async fetchData() {
 
-      debugger
-
       const oStore = useOntoStore()
       await oStore.fetchStore()
       this.classes = oStore.classes
@@ -182,9 +247,9 @@ export default {
       this.meta = oStore.meta
       this.loaded = true
 
-      if (this.meta.title) 
-        document.title= this.meta.name
-      
+      if (this.meta.title)
+        document.title = this.meta.name
+
     }
   },
 
