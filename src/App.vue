@@ -33,6 +33,7 @@ import PersonItem from './components/PersonItem.vue';
               <span>Documentation: <a href="https://w3id.org/riskman/">https://w3id.org/riskman/</a></span>
               <span>Ontology: <a href="https://w3id.org/riskman/ontology">https://w3id.org/riskman/ontology</a></span>
               <span>Shapes: <a href="https://w3id.org/riskman/shapes">https://w3id.org/riskman/shapes</a></span>
+              <span>GitHub repo: <a href="https://w3id.org/riskman/repo">https://w3id.org/riskman/repo</a></span>
             </div>
             <br />
             <div id="dates">
