@@ -25,6 +25,10 @@ export default {
 </script>
 
 <style scoped>
+ul.horizontal {
+  padding-left: 0;
+}
+
 ul.horizontal li {
   display: inline;
   margin-right: 30px;
