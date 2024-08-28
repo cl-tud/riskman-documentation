@@ -10,14 +10,14 @@
   "dependencies": {
     "file-system": "^2.2.2",
     "fs": "^0.0.1-security",
+    "ontoglimpse": "latest",
     "path": "^0.12.7",
     "pinia": "^2.1.7",
     "rdflib": "^2.2.32",
-    "vue": "^3.3.4",
-    "ontoglimpse": "latest"
+    "vue": "^3.3.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.4.0",
+    "@vitejs/plugin-vue": "^4.6.2",
     "vite": "^4.4.11"
   }
 }

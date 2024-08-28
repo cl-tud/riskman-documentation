@@ -152,10 +152,12 @@ import PersonItem from './components/PersonItem.vue';
 
         <OntologyInfoItem name="Metadata">
           <template #info>
-            <div id="links" v-if="securityOntology.meta.customSwitch1=='true'">
+            <div id="links" v-if="securityOntology.meta.customSwitch1 == 'true'">
               <span>Documentation: <a href="https://w3id.org/riskman/">https://w3id.org/riskman/</a></span>
-              <span>Ontology: <a href="https://w3id.org/riskman/ontology/security">https://w3id.org/riskman/ontology/security</a></span>
-              <span>Shapes: <a href="https://w3id.org/riskman/shapes/security">https://w3id.org/riskman/shapes/security</a></span>
+              <span>Ontology: <a
+                  href="https://w3id.org/riskman/ontology/security">https://w3id.org/riskman/ontology/security</a></span>
+              <span>Shapes: <a
+                  href="https://w3id.org/riskman/shapes/security">https://w3id.org/riskman/shapes/security</a></span>
               <span>GitHub repo: <a href="https://w3id.org/riskman/repo">https://w3id.org/riskman/repo</a></span>
             </div>
             <br />
@@ -206,6 +208,21 @@ import PersonItem from './components/PersonItem.vue';
           </div>
         </template>
       </OntologyEntity>
+
+
+      <div v-if="securityOntology.namedIndividuals.length > 0">
+        <TableOfContents :objects="securityOntology.namedIndividuals" name="Named individuals" />
+
+        <OntologyEntity v-for="ni in securityOntology.namedIndividuals" :et="ni">
+          <template #specific v-if="ni.showSpecific.length > 0">
+            <div class="specific">
+              <OptionalHtmlItem :objects="ni.classes" name="Class" />
+            </div>
+          </template>
+        </OntologyEntity>
+
+      </div>
+
       <footer>
         Made with &nbsp<a href='https://www.npmjs.com/package/ontoglimpse'>ontoglimpse</a> &nbsp in Dresden.
       </footer>
@@ -331,11 +348,15 @@ export default {
       loaded: false,
       mainOntology: {
         classes: [],
-        objectProperties: []
+        namedIndividuals: [],
+        objectProperties: [],
+        meta: {}
       },
       securityOntology: {
         classes: [],
-        objectProperties: []
+        objectProperties: [],
+        namedIndividuals: [],
+        meta: {}
       },
 
     }
@@ -344,13 +365,12 @@ export default {
     async fetchData() {
 
 
-      
+
       const oStore = useOntoStore()
       await oStore.fetchStore()
       this.mainOntology = oStore.mainOntology
       this.securityOntology = oStore.securityOntology
       this.loaded = true
-      debugger
 
       if (this.mainOntology.meta.name)
         document.title = this.mainOntology.meta.name

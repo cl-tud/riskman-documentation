@@ -30,11 +30,13 @@ export const useOntoStore = defineStore({
         mainOntology: {
             meta: undefined,
             classes: [],
+            namedIndividuals: [],
             objectProperties: []
         },
         securityOntology: {
             meta: undefined,
             classes: [],
+            namedIndividuals: [],
             objectProperties: []
         },
         name: 'oStore',
@@ -98,6 +100,13 @@ export const useOntoStore = defineStore({
                 showSpecific: [...cl.subClassOf(), ...cl.superClassOf(), ...cl.domainOf(), ...cl.rangeOf(), ...cl.equivalentClass()]
             }))
 
+            const namedIndividuals = og.namedIndividuals().map((ni) => ({
+                name: ni.name,
+                iri: ni.iri,
+                classes: ni.classes(),
+                showSpecific: [...ni.classes()]
+
+            }))
 
             const objectProperties = og.objectProperties().map((op) =>
             ({
@@ -111,10 +120,19 @@ export const useOntoStore = defineStore({
                 showSpecific: [...op.subPropertyOf(), ...op.superPropertyOf(), ...op.domain(), ...op.range()]
             }))
 
+
+
+            const individuals = og.namedIndividuals()
+
+            if (individuals.length > 0) {
+                debugger
+            }
+
             return {
                 meta: og.metadata(),
                 classes: classes,
-                objectProperties: objectProperties
+                objectProperties: objectProperties,
+                namedIndividuals: namedIndividuals
             }
 
         },
