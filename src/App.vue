@@ -364,8 +364,6 @@ export default {
   methods: {
     async fetchData() {
 
-
-
       const oStore = useOntoStore()
       await oStore.fetchStore()
       this.mainOntology = oStore.mainOntology
