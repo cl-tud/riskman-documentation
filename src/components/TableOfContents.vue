@@ -27,6 +27,7 @@ export default {
 <style scoped>
 ul.horizontal {
   padding-left: 0;
+  text-align: justify;
 }
 
 ul.horizontal li {

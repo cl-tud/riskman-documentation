@@ -10,6 +10,13 @@ import { defineStore } from "pinia"
 
 const shaclURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/shapes.ttl'
 const ontologyURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/ontology.ttl'
+const ontologySecurityURL = 'https://raw.githubusercontent.com/cl-tud/riskman/main/ontology-security.ttl'
+
+const FORMATTER = {
+    format: 'html',
+    syntax: 'manchester',
+    useLabel: true
+}
 
 
 export const useOntoStore = defineStore({
@@ -17,8 +24,14 @@ export const useOntoStore = defineStore({
     state: () => ({
         og: null,
         isLoading: false,
-        classes: [],
-        objectProperties: [],
+        mainOntology: {
+            classes: [],
+            objectProperties: []
+        },
+        securityOntology: {
+            classes: [],
+            objectProperties: []
+        },
         name: 'oStore',
         meta: undefined
     }),
@@ -28,7 +41,7 @@ export const useOntoStore = defineStore({
             const data = await res.text()
 
             const mime = 'text/turtle'
-            const base_uri = 'http://example.com/ontology#'
+            const base_uri = 'https://w3id.org/riskman/ontology'
 
             const store = $rdf.graph()
             $rdf.parse(data, store, base_uri, mime)
@@ -36,18 +49,94 @@ export const useOntoStore = defineStore({
         },
 
         async fetchStore() {
+            try {
+                this.isLoading = true
+
+                const mainOntologyStore = await this.fetchOntologyStore(ontologyURL)
+                const securityOntologyStore = await this.fetchOntologyStore(ontologySecurityURL)
+
+                this.mainOntology = this.extractEntities(mainOntologyStore)
+                this.securityOntology = this.extractEntities(securityOntologyStore)
+
+                this.meta = mainOntologyStore.metadata()
+
+
+            } catch (error) {
+
+            } finally {
+                this.isLoading = false
+            }
+        },
+
+
+        async fetchOntologyStore(url) {
+            let ontoStore = await this.fetchRDF(url)
+            // let shaclStore = await this.fetchRDF(shaclURL)
+
+            const totalStore = $rdf.graph()
+            totalStore.addAll(ontoStore.statements)
+            // totalStore.addAll(shaclStore.statements)
+
+            return new OntoGlimpse(totalStore, FORMATTER)
+        },
+
+
+        extractEntities(og) {
+
+            // TODO: capture that in classes
+            const classes = og.classes().map((cl) => ({
+                name: cl.name,
+                iri: cl.iri,
+                equivalentClass: cl.equivalentClass(),
+                subClassOf: cl.subClassOf(),
+                superClassOf: cl.superClassOf(),
+                domainOf: cl.domainOf(),
+                rangeOf: cl.rangeOf(),
+                comment: cl.comment(),
+                showSpecific: [...cl.subClassOf(), ...cl.superClassOf(), ...cl.domainOf(), ...cl.rangeOf(), ...cl.equivalentClass()]
+            }))
+
+
+            const objectProperties = og.objectProperties().map((op) =>
+            ({
+                name: op.name,
+                iri: op.iri,
+                subPropertyOf: op.subPropertyOf(),
+                superPropertyOf: op.superPropertyOf(),
+                domain: op.domain(),
+                range: op.range(),
+                comment: op.comment(),
+                showSpecific: [...op.subPropertyOf(), ...op.superPropertyOf(), ...op.domain(), ...op.range()]
+            }))
+
+            return {
+                classes: classes,
+                objectProperties: objectProperties
+            }
+
+        },
+
+        async fetchStore2(url) {
             this.isLoading = true
             try {
 
-                let ontoStore = await this.fetchRDF(ontologyURL)
-                let shaclStore = await this.fetchRDF(shaclURL)
+                let ontoStore = await this.fetchRDF(url)
+                // let shaclStore = await this.fetchRDF(shaclURL)
 
                 const totalStore = $rdf.graph()
                 totalStore.addAll(ontoStore.statements)
-                totalStore.addAll(shaclStore.statements)
+                // totalStore.addAll(shaclStore.statements)
+
+                const formatter = {
+                    format: 'html',
+                    syntax: 'manchester',
+                    useLabel: true
+                }
 
                 this.og = new OntoGlimpse(totalStore)
 
+
+                // TODO: where is this used?
                 this.og.__formatter.format = 'html'
                 this.og.__formatter.syntax = 'manchester'
                 this.og.__formatter.useLabel = true
@@ -87,7 +176,6 @@ export const useOntoStore = defineStore({
 
 
             } catch (error) {
-
             } finally {
                 this.isLoading = false
             }

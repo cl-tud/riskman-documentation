@@ -17,7 +17,7 @@ import PersonItem from './components/PersonItem.vue';
 
       <header>
         <img id="logo" src="./assets/riskman_green.png">
-        <div id="titles">
+        <div id="titles" class="text-center">
           <h1 class="ubuntu-bold">{{ meta.name }}</h1>
           <h3 v-if="meta.title">{{ meta.title }}</h3>
         </div>
@@ -108,9 +108,9 @@ import PersonItem from './components/PersonItem.vue';
 
 
 
-      <TableOfContents :objects="classes" name="Classes" />
+      <TableOfContents :objects="mainOntology.classes" name="Classes" />
 
-      <OntologyEntity v-for="cl in classes" :et="cl">
+      <OntologyEntity v-for="cl in mainOntology.classes" :et="cl">
         <template #specific v-if="cl.showSpecific.length > 0">
           <div class="specific">
             <OptionalHtmlItem :objects="cl.equivalentClass" name="Equivalent to" />
@@ -122,9 +122,44 @@ import PersonItem from './components/PersonItem.vue';
         </template>
       </OntologyEntity>
 
-      <TableOfContents :objects="objectProperties" name="Object properties" />
+      <TableOfContents :objects="mainOntology.objectProperties" name="Object properties" />
 
-      <OntologyEntity v-for="op in objectProperties" :et="op">
+      <OntologyEntity v-for="op in mainOntology.objectProperties" :et="op">
+        <template #specific v-if="op.showSpecific.length > 0">
+          <div class="specific">
+            <OptionalHtmlItem :objects="op.subPropertyOf" name="Subproperty of" />
+            <OptionalHtmlItem :objects="op.superPropertyOf" name="Superproperty of" />
+            <OptionalHtmlItem :objects="op.domain" name="Domain" />
+            <OptionalHtmlItem :objects="op.range" name="Range" />
+          </div>
+        </template>
+      </OntologyEntity>
+
+      <hr>
+
+      <div class="text-center margin-top">
+        <h1 class="ubuntu-bold">The Riskman Security Ontology (Experimental)</h1>
+      </div>
+
+      <TableOfContents :objects="securityOntology.classes" name="Classes" />
+      
+      <!-- TODO: this should be in some defined Vue element. -->
+
+      <OntologyEntity v-for="cl in securityOntology.classes" :et="cl">
+        <template #specific v-if="cl.showSpecific.length > 0">
+          <div class="specific">
+            <OptionalHtmlItem :objects="cl.equivalentClass" name="Equivalent to" />
+            <OptionalHtmlItem :objects="cl.subClassOf" name="Subclass of" />
+            <OptionalHtmlItem :objects="cl.superClassOf" name="Superclass of" />
+            <OptionalHtmlItem :objects="cl.domainOf" name="Domain of" />
+            <OptionalHtmlItem :objects="cl.rangeOf" name="Range of" />
+          </div>
+        </template>
+      </OntologyEntity>
+
+      <TableOfContents :objects="securityOntology.objectProperties" name="Object properties" />
+
+      <OntologyEntity v-for="op in securityOntology.objectProperties" :et="op">
         <template #specific v-if="op.showSpecific.length > 0">
           <div class="specific">
             <OptionalHtmlItem :objects="op.subPropertyOf" name="Subproperty of" />
@@ -205,8 +240,15 @@ header {
 }
 
 #titles {
-  text-align: center;
   flex-grow: 2;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.margin-top {
+  margin-top: 100px;
 }
 
 #licenses {
@@ -250,8 +292,15 @@ export default {
   data() {
     return {
       loaded: false,
-      classes: [],
-      objectProperties: [],
+      mainOntology: {
+        classes: [],
+        objectProperties: []
+      },
+      securityOntology: {
+        classes: [],
+        objectProperties: []
+      },
+
       meta: {
         creators: []
       }
@@ -263,8 +312,8 @@ export default {
 
       const oStore = useOntoStore()
       await oStore.fetchStore()
-      this.classes = oStore.classes
-      this.objectProperties = oStore.objectProperties
+      this.mainOntology = oStore.mainOntology
+      this.securityOntology = oStore.securityOntology
       this.meta = oStore.meta
       this.loaded = true
 
