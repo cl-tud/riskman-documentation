@@ -18,8 +18,8 @@ import PersonItem from './components/PersonItem.vue';
       <header>
         <img id="logo" src="./assets/riskman_green.png">
         <div id="titles" class="text-center">
-          <h1 class="ubuntu-bold">{{ meta.name }}</h1>
-          <h3 v-if="meta.title">{{ meta.title }}</h3>
+          <h1 class="ubuntu-bold">{{ mainOntology.meta.name }}</h1>
+          <h3 v-if="mainOntology.meta.title">{{ mainOntology.meta.title }}</h3>
         </div>
 
       </header>
@@ -37,8 +37,10 @@ import PersonItem from './components/PersonItem.vue';
             </div>
             <br />
             <div id="dates">
-              <div v-if="meta.creationDate">Creation date: <span class="date">{{ meta.creationDate }}</span></div>
-              <div v-if="meta.modificationDate">Modification date: <span class="date">{{ meta.modificationDate }}</span>
+              <div v-if="mainOntology.meta.creationDate">Creation date: <span class="date">{{
+      mainOntology.meta.creationDate }}</span></div>
+              <div v-if="mainOntology.meta.modificationDate">Modification date: <span class="date">{{
+      mainOntology.meta.modificationDate }}</span>
               </div>
             </div>
           </template>
@@ -72,7 +74,7 @@ import PersonItem from './components/PersonItem.vue';
         <OntologyInfoItem name="Creators">
           <template #info>
             <ul class="people">
-              <li v-for="c in meta.creators">
+              <li v-for="c in mainOntology.meta.creators">
                 <PersonItem :person="c" />
               </li>
             </ul>
@@ -83,7 +85,7 @@ import PersonItem from './components/PersonItem.vue';
         <OntologyInfoItem name="Contributors">
           <template #info>
             <ul class="people">
-              <li v-for="c in meta.contributors">
+              <li v-for="c in mainOntology.meta.contributors">
                 <PersonItem :person="c" />
               </li>
             </ul>
@@ -94,15 +96,15 @@ import PersonItem from './components/PersonItem.vue';
 
       <hr>
 
-      <OntologyInfoItem v-if="meta.description" name="Description">
+      <OntologyInfoItem v-if="mainOntology.meta.description" name="Description">
         <template #info>
-          <p>{{ meta.description }}</p>
+          <p>{{ mainOntology.meta.description }}</p>
         </template>
       </OntologyInfoItem>
 
-      <OntologyInfoItem v-if="meta.abstract" name="Abstract">
+      <OntologyInfoItem v-if="mainOntology.meta.abstract" name="Abstract">
         <template #info>
-          <p>{{ meta.abstract }}</p>
+          <p>{{ mainOntology.meta.abstract }}</p>
         </template>
       </OntologyInfoItem>
 
@@ -137,12 +139,47 @@ import PersonItem from './components/PersonItem.vue';
 
       <hr>
 
-      <div class="text-center margin-top">
-        <h1 class="ubuntu-bold">The Riskman Security Ontology (Experimental)</h1>
+      <!-- Security ontology -->
+
+      <div id="titles" class="text-center margin-top">
+        <h1 class="ubuntu-bold">{{ securityOntology.meta.name }}</h1>
+        <h3 v-if="securityOntology.meta.title">{{ securityOntology.meta.title }}</h3>
       </div>
 
+      <hr>
+
+      <div class="side-by-side">
+
+        <OntologyInfoItem name="Metadata">
+          <template #info>
+            <div id="links" v-if="securityOntology.meta.customSwitch1=='true'">
+              <span>Documentation: <a href="https://w3id.org/riskman/">https://w3id.org/riskman/</a></span>
+              <span>Ontology: <a href="https://w3id.org/riskman/ontology/security">https://w3id.org/riskman/ontology/security</a></span>
+              <span>Shapes: <a href="https://w3id.org/riskman/shapes/security">https://w3id.org/riskman/shapes/security</a></span>
+              <span>GitHub repo: <a href="https://w3id.org/riskman/repo">https://w3id.org/riskman/repo</a></span>
+            </div>
+            <br />
+            <div id="dates">
+              <div v-if="securityOntology.meta.creationDate">Creation date: <span class="date">{{
+      securityOntology.meta.creationDate }}</span></div>
+              <div v-if="securityOntology.meta.modificationDate">Modification date: <span class="date">{{
+      securityOntology.meta.modificationDate }}</span>
+              </div>
+            </div>
+          </template>
+        </OntologyInfoItem>
+      </div>
+
+      <hr>
+
+      <OntologyInfoItem v-if="securityOntology.meta.description" name="Description">
+        <template #info>
+          <p>{{ securityOntology.meta.description }}</p>
+        </template>
+      </OntologyInfoItem>
+
       <TableOfContents :objects="securityOntology.classes" name="Classes" />
-      
+
       <!-- TODO: this should be in some defined Vue element. -->
 
       <OntologyEntity v-for="cl in securityOntology.classes" :et="cl">
@@ -301,24 +338,22 @@ export default {
         objectProperties: []
       },
 
-      meta: {
-        creators: []
-      }
-
     }
   },
   methods: {
     async fetchData() {
 
+
+      
       const oStore = useOntoStore()
       await oStore.fetchStore()
       this.mainOntology = oStore.mainOntology
       this.securityOntology = oStore.securityOntology
-      this.meta = oStore.meta
       this.loaded = true
+      debugger
 
-      if (this.meta.title)
-        document.title = this.meta.name
+      if (this.mainOntology.meta.name)
+        document.title = this.mainOntology.meta.name
 
     }
   },

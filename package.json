@@ -14,7 +14,7 @@
     "pinia": "^2.1.7",
     "rdflib": "^2.2.32",
     "vue": "^3.3.4",
-    "ontoglimpse": "^0.0.123"
+    "ontoglimpse": "latest"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.4.0",

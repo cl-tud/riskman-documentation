@@ -12,6 +12,9 @@ const shaclURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/
 const ontologyURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/ontology.ttl'
 const ontologySecurityURL = 'https://raw.githubusercontent.com/cl-tud/riskman/main/ontology-security.ttl'
 
+const ontologyBaseURI = 'https://w3id.org/riskman/ontology'
+const ontologySecurityBaseURI = 'https://w3id.org/riskman/ontology/security'
+
 const FORMATTER = {
     format: 'html',
     syntax: 'manchester',
@@ -25,26 +28,27 @@ export const useOntoStore = defineStore({
         og: null,
         isLoading: false,
         mainOntology: {
+            meta: undefined,
             classes: [],
             objectProperties: []
         },
         securityOntology: {
+            meta: undefined,
             classes: [],
             objectProperties: []
         },
         name: 'oStore',
-        meta: undefined
+        // meta: undefined
     }),
     actions: {
-        async fetchRDF(url) {
+        async fetchRDF(url, baseUri) {
             const res = await fetch(url)
             const data = await res.text()
 
             const mime = 'text/turtle'
-            const base_uri = 'https://w3id.org/riskman/ontology'
 
             const store = $rdf.graph()
-            $rdf.parse(data, store, base_uri, mime)
+            $rdf.parse(data, store, baseUri, mime)
             return store
         },
 
@@ -52,14 +56,11 @@ export const useOntoStore = defineStore({
             try {
                 this.isLoading = true
 
-                const mainOntologyStore = await this.fetchOntologyStore(ontologyURL)
-                const securityOntologyStore = await this.fetchOntologyStore(ontologySecurityURL)
+                const mainOntologyStore = await this.fetchOntologyStore(ontologyURL, ontologyBaseURI)
+                const securityOntologyStore = await this.fetchOntologyStore(ontologySecurityURL, ontologySecurityBaseURI)
 
                 this.mainOntology = this.extractEntities(mainOntologyStore)
                 this.securityOntology = this.extractEntities(securityOntologyStore)
-
-                this.meta = mainOntologyStore.metadata()
-
 
             } catch (error) {
 
@@ -69,8 +70,9 @@ export const useOntoStore = defineStore({
         },
 
 
-        async fetchOntologyStore(url) {
-            let ontoStore = await this.fetchRDF(url)
+        async fetchOntologyStore(url, baseUri) {
+
+            let ontoStore = await this.fetchRDF(url, baseUri)
             // let shaclStore = await this.fetchRDF(shaclURL)
 
             const totalStore = $rdf.graph()
@@ -110,12 +112,14 @@ export const useOntoStore = defineStore({
             }))
 
             return {
+                meta: og.metadata(),
                 classes: classes,
                 objectProperties: objectProperties
             }
 
         },
 
+        // TODO: remove
         async fetchStore2(url) {
             this.isLoading = true
             try {
