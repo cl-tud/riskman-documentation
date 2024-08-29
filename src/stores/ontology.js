@@ -121,13 +121,6 @@ export const useOntoStore = defineStore({
             }))
 
 
-
-            const individuals = og.namedIndividuals()
-
-            if (individuals.length > 0) {
-                debugger
-            }
-
             return {
                 meta: og.metadata(),
                 classes: classes,

@@ -329,9 +329,9 @@ footer {
 
 hr {
   margin: 20px 0;
-  border: 0;
+  /* border: 0; */
   /* Remove default border */
-  border-top: 0.5px solid white;
+  /* border-top: 0.5px solid white; */
   /* Set custom border thickness and color */
 }
 </style>

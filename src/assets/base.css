@@ -36,6 +36,10 @@
   --section-gap: 160px;
 }
 
+hr {
+  border-top: 0.5px solid var(--vt-c-divider-dark-2);
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--vt-c-black);
@@ -48,7 +52,12 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
   }
+
+  hr {
+    border-top: 0.5px solid #fff;
+  }
 }
+
 
 *,
 *::before,
