@@ -38,9 +38,9 @@ import PersonItem from './components/PersonItem.vue';
             <br />
             <div id="dates">
               <div v-if="mainOntology.meta.creationDate">Creation date: <span class="date">{{
-      mainOntology.meta.creationDate }}</span></div>
+                mainOntology.meta.creationDate }}</span></div>
               <div v-if="mainOntology.meta.modificationDate">Modification date: <span class="date">{{
-      mainOntology.meta.modificationDate }}</span>
+                mainOntology.meta.modificationDate }}</span>
               </div>
             </div>
           </template>
@@ -137,92 +137,8 @@ import PersonItem from './components/PersonItem.vue';
         </template>
       </OntologyEntity>
 
-      <hr>
-
       <!-- Security ontology -->
-
-      <div id="titles" class="text-center margin-top">
-        <h1 class="ubuntu-bold">{{ securityOntology.meta.name }}</h1>
-        <h3 v-if="securityOntology.meta.title">{{ securityOntology.meta.title }}</h3>
-      </div>
-
-      <hr>
-
-      <div class="side-by-side">
-
-        <OntologyInfoItem name="Metadata">
-          <template #info>
-            <div id="links" v-if="securityOntology.meta.customSwitch1 == 'true'">
-              <span>Documentation: <a href="https://w3id.org/riskman/">https://w3id.org/riskman/</a></span>
-              <span>Ontology: <a
-                  href="https://w3id.org/riskman/ontology/security">https://w3id.org/riskman/ontology/security</a></span>
-              <span>Shapes: <a
-                  href="https://w3id.org/riskman/shapes/security">https://w3id.org/riskman/shapes/security</a></span>
-              <span>GitHub repo: <a href="https://w3id.org/riskman/repo">https://w3id.org/riskman/repo</a></span>
-            </div>
-            <br />
-            <div id="dates">
-              <div v-if="securityOntology.meta.creationDate">Creation date: <span class="date">{{
-      securityOntology.meta.creationDate }}</span></div>
-              <div v-if="securityOntology.meta.modificationDate">Modification date: <span class="date">{{
-      securityOntology.meta.modificationDate }}</span>
-              </div>
-            </div>
-          </template>
-        </OntologyInfoItem>
-      </div>
-
-      <hr>
-
-      <OntologyInfoItem v-if="securityOntology.meta.description" name="Description">
-        <template #info>
-          <p>{{ securityOntology.meta.description }}</p>
-        </template>
-      </OntologyInfoItem>
-
-      <TableOfContents :objects="securityOntology.classes" name="Classes" />
-
-      <!-- TODO: this should be in some defined Vue element. -->
-
-      <OntologyEntity v-for="cl in securityOntology.classes" :et="cl">
-        <template #specific v-if="cl.showSpecific.length > 0">
-          <div class="specific">
-            <OptionalHtmlItem :objects="cl.equivalentClass" name="Equivalent to" />
-            <OptionalHtmlItem :objects="cl.subClassOf" name="Subclass of" />
-            <OptionalHtmlItem :objects="cl.superClassOf" name="Superclass of" />
-            <OptionalHtmlItem :objects="cl.domainOf" name="Domain of" />
-            <OptionalHtmlItem :objects="cl.rangeOf" name="Range of" />
-          </div>
-        </template>
-      </OntologyEntity>
-
-      <TableOfContents :objects="securityOntology.objectProperties" name="Object properties" />
-
-      <OntologyEntity v-for="op in securityOntology.objectProperties" :et="op">
-        <template #specific v-if="op.showSpecific.length > 0">
-          <div class="specific">
-            <OptionalHtmlItem :objects="op.subPropertyOf" name="Subproperty of" />
-            <OptionalHtmlItem :objects="op.superPropertyOf" name="Superproperty of" />
-            <OptionalHtmlItem :objects="op.domain" name="Domain" />
-            <OptionalHtmlItem :objects="op.range" name="Range" />
-          </div>
-        </template>
-      </OntologyEntity>
-
-
-      <div v-if="securityOntology.namedIndividuals.length > 0">
-        <TableOfContents :objects="securityOntology.namedIndividuals" name="Named individuals" />
-
-        <OntologyEntity v-for="ni in securityOntology.namedIndividuals" :et="ni">
-          <template #specific v-if="ni.showSpecific.length > 0">
-            <div class="specific">
-              <OptionalHtmlItem :objects="ni.classes" name="Class" />
-            </div>
-          </template>
-        </OntologyEntity>
-
-      </div>
-
+       
       <footer>
         Made with &nbsp<a href='https://www.npmjs.com/package/ontoglimpse'>ontoglimpse</a> &nbsp in Dresden.
       </footer>
@@ -352,13 +268,12 @@ export default {
         objectProperties: [],
         meta: {}
       },
-      securityOntology: {
-        classes: [],
-        objectProperties: [],
-        namedIndividuals: [],
-        meta: {}
-      },
-
+      // securityOntology: {
+      //   classes: [],
+      //   objectProperties: [],
+      //   namedIndividuals: [],
+      //   meta: {}
+      // },
     }
   },
   methods: {
@@ -373,11 +288,24 @@ export default {
       if (this.mainOntology.meta.name)
         document.title = this.mainOntology.meta.name
 
+    },
+
+    fetchFromFile() {
+      debugger
+      const oStore = useOntoStore()
+      oStore.fetchFromFile()
+      this.mainOntology = oStore.mainOntology
+      // this.securityOntology = oStore.securityOntology
+      this.loaded = true
+
+      if (this.mainOntology.meta.name)
+        document.title = this.mainOntology.meta.name
     }
   },
 
   mounted() {
-    this.fetchData()
+    // this.fetchData()
+    this.fetchFromFile()
 
   }
 }

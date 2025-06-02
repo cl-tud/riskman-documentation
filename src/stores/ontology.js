@@ -8,6 +8,8 @@ import { OntoGlimpse } from "ontoglimpse"
 
 import { defineStore } from "pinia"
 
+import { ontologyStr } from '../assets/ontology'
+
 const shaclURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/shapes.ttl'
 const ontologyURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/ontology.ttl'
 const ontologySecurityURL = 'https://raw.githubusercontent.com/cl-tud/riskman/main/ontology-security.ttl'
@@ -82,6 +84,35 @@ export const useOntoStore = defineStore({
             // totalStore.addAll(shaclStore.statements)
 
             return new OntoGlimpse(totalStore, FORMATTER)
+        },
+
+        fetchFromFile() {
+            debugger
+            this.isLoading = true
+            const mime = 'text/turtle'
+            const store = $rdf.graph()
+            $rdf.parse(ontologyStr, store, ontologyBaseURI, mime) // the ontologyStr string 
+
+            const storeOG =  new OntoGlimpse(store, FORMATTER)
+            this.mainOntology = this.extractEntities(storeOG)
+            this.isLoading = false
+        },
+
+        async fetchStore() {
+            try {
+                this.isLoading = true
+
+                const mainOntologyStore = await this.fetchOntologyStore(ontologyURL, ontologyBaseURI)
+                const securityOntologyStore = await this.fetchOntologyStore(ontologySecurityURL, ontologySecurityBaseURI)
+
+                this.mainOntology = this.extractEntities(mainOntologyStore)
+                this.securityOntology = this.extractEntities(securityOntologyStore)
+
+            } catch (error) {
+
+            } finally {
+                this.isLoading = false
+            }
         },
 
 
