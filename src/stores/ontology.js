@@ -8,9 +8,13 @@ import { OntoGlimpse } from "ontoglimpse"
 
 import { defineStore } from "pinia"
 
-const shaclURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/shapes.ttl'
-const ontologyURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/ontology.ttl'
-const ontologySecurityURL = 'https://raw.githubusercontent.com/cl-tud/riskman/main/ontology-security.ttl'
+// const shaclURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/shapes.ttl'
+// const ontologyURL = 'https://raw.githubusercontent.com/cl-tud/kimeds-ontology/main/ontology.ttl'
+// const ontologySecurityURL = 'https://raw.githubusercontent.com/cl-tud/riskman/main/ontology-security.ttl'
+
+const shaclURL = 'https://w3id.org/riskman/shapes'
+const ontologyURL = 'https://w3id.org/riskman/ontology'
+const ontologySecurityURL = 'https://w3id.org/riskman/ontology/security'
 
 const ontologyBaseURI = 'https://w3id.org/riskman/ontology'
 const ontologySecurityBaseURI = 'https://w3id.org/riskman/ontology/security'
